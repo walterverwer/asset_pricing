@@ -16,7 +16,7 @@ stocks = ['^DJI', 'GS', 'MCD', 'DOW', 'CAT', 'MRK', 'CVX', 'VZ',
           'MSFT', 'AMGN', 'CSCO', 'BA', 'PG', 'JPM', 'WBA', 'DIS',
           'KO', 'MMM', 'AXP', 'WMT', 'JNJ', 'HON', 'V', 'NKE',
           'AAPL', 'CRM', 'HD', 'TRV', 'UNH', 'INTC', 'IBM']
-start_data = '2019-03-20' # important: stock 'DOW' is observed from this date onwards
+start_data = '2019-03-21' # important: stock 'DOW' is observed from this date onwards
 end_data = '2020-12-31'
 
 if os.path.isfile('dow_jones_stocks.csv'): # check if data exists:
