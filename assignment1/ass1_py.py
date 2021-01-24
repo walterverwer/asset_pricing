@@ -5,8 +5,9 @@ Created on Sun Jan 24 11:14:05 2021
 @author: walte
 """
 
+# source: https://github.com/walterverwer/asset_pricing
+
 import yfinance as yf
-import datetime
 import pandas as pd
 import os.path
 
@@ -17,7 +18,6 @@ stocks = ['^DJI', 'GS', 'MCD', 'DOW', 'CAT', 'MRK', 'CVX', 'VZ',
           'AAPL', 'CRM', 'HD', 'TRV', 'UNH', 'INTC', 'IBM']
 start_data = '2019-03-20' # important: stock 'DOW' is observed from this date onwards
 end_data = '2020-12-31'
-
 
 if os.path.isfile('dow_jones_stocks.csv'): # check if data exists:
     df = pd.read_csv('dow_jones_stocks.csv')
