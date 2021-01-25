@@ -85,10 +85,16 @@ plt.title('Efficient Frontier and Individual Assets')
 plt.show()
 
 ## Question 3:
-# slope of tangent line:
-# 1. take some target returns from 0 to 0.01:
-mu_p = np.linspace(0, 0.01, 100)
-slope = (D*np.sqrt(sigma2_p)) / (C*(mu_p - A/C))
+# Zero beta portfolio for some return mu_p
+
+# 1. take some target return and corresponding sigma_p:
+mu_p = 0.001
+sigma_p = np.sqrt(1/C + C/D * (mu_p - A/C)**2)
+
+# 2. construct mu_zp
+mu_zp = A/C - (D/C**2) / (mu_p - A/C)
+
+
 
 
 
