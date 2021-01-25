@@ -30,14 +30,17 @@ else: # get all stocks using yahoo finance api:
     counter = 0 # used to handle the first stock in the list
     for stock in stocks:
         if counter == 0:
-            df_prices = pd.DataFrame(yf.download(stock, start=start_data, end=end_data)['Adj Close'])
+            df_prices = pd.DataFrame(yf.download(stock, 
+                                                 start=start_data, 
+                                                 end=end_data)['Adj Close'])
+            
             df_prices[stock] = df_prices['Adj Close']
             df_prices.drop('Adj Close', inplace=True, axis = 1)
         else:
-            df_prices[stock] = yf.download(stock, start=start_data, end=end_data)['Adj Close']
+            df_prices[stock] = yf.download(stock, 
+                                           start=start_data, 
+                                           end=end_data)['Adj Close']
         counter += 1 
-    # set index date collumn:
-    df_prices.set_index('Date')
     # save to csv:
     df_prices.to_csv('dow_jones_stocks.csv')
 
@@ -63,12 +66,29 @@ mu = series_mean
 A = jota.T @ Sigma_inv @ mu     # jota' * Sigma^-1 * mu
 B = mu.T @ Sigma_inv @ mu       # mu' * Sigma^-1 * mu
 C = jota.T @ Sigma_inv @ jota   # jota' * Sigma^-1 * jota
-D = B*C - A^2
+D = B*C - A**2
 
+# generate some values for mu^{bar}, these are target portfolio returns:
+mu_bar_p = np.linspace(-0.005,0.01,1000)
+sigma2_p = 1/C + C/D * (mu_bar_p - A/C)**2
 
+# plot efficient frontier and individual assets
+plt.scatter(np.sqrt(np.diag(df_cov.loc[:, df_cov.columns != '^DJI'])),series_mean[1:],
+            label='Individual Assets')
+plt.scatter(np.sqrt(np.diag(df_cov.loc[:, df_cov.columns == '^DJI'])),series_mean[1],
+            color='red', label='Dow Jones Index')
+plt.plot(np.sqrt(sigma2_p), mu_bar_p, color='black', label='Efficient Frontier')
+plt.legend()
+plt.xlabel(r'$\sigma$')
+plt.ylabel(r'$\bar{R}$',rotation=0)
+plt.title('Efficient Frontier and Individual Assets')
+plt.show()
 
-
-
+## Question 3:
+# slope of tangent line:
+# 1. take some target returns from 0 to 0.01:
+mu_p = np.linspace(0, 0.01, 100)
+slope = (D*np.sqrt(sigma2_p)) / (C*(mu_p - A/C))
 
 
 
