@@ -69,39 +69,29 @@ C = jota.T @ Sigma_inv @ jota   # jota' * Sigma^-1 * jota
 D = B*C - A**2
 
 # generate some values for mu^{bar}, these are target portfolio returns:
-mu_bar_p = np.linspace(-0.005,0.01,1000)
-sigma2_p = 1/C + C/D * (mu_bar_p - A/C)**2
+mu_bar_p = np.linspace(-0.008,0.01,1000)
+sigma_p = np.sqrt(1/C + C/D * (mu_bar_p - A/C)**2)
 
-# plot efficient frontier and individual assets
-plt.scatter(np.sqrt(np.diag(df_cov.loc[:, df_cov.columns != '^DJI'])),series_mean[1:],
-            label='Individual Assets')
-plt.scatter(np.sqrt(np.diag(df_cov.loc[:, df_cov.columns == '^DJI'])),series_mean[1],
-            color='red', label='Dow Jones Index')
-plt.plot(np.sqrt(sigma2_p), mu_bar_p, color='black', label='Efficient Frontier')
-plt.legend()
-plt.xlabel(r'$\sigma$')
-plt.ylabel(r'$\bar{R}$',rotation=0)
-plt.title('Efficient Frontier and Individual Assets')
-plt.show()
+# plotting is done in q3
 
 ## Question 3:
 # Zero beta portfolio for some return mu_p
+mu_mv = 0.004 # arbitrary point on mv frontier
+sigma_mv = np.sqrt(1/C + C/D * (mu_mv - A/C)**2) # variance corresponding to mv
+mu_zp = A/C - ((D/C**2) / (mu_mv - A/C)) # corresponding zero beta portfolio
+slope = (D * sigma_mv) / (C*(mu_mv-A/C)) # tangent line
+sigma_range = np.linspace(0,0.025,1000)
+line = mu_zp + slope*sigma_range
 
-# 1. take some target return and corresponding sigma_p:
-mu_p = 0.001
-sigma_p = np.sqrt(1/C + C/D * (mu_p - A/C)**2)
-
-# 2. construct mu_zp
-mu_zp = A/C - (D/C**2) / (mu_p - A/C)
-
-
-
-
-
-
-
-
-
-
-
-
+# plot zero beta line
+plt.plot(sigma_range,line, label='Zero Beta Portfolio Combinations',color='blue')
+plt.scatter(np.sqrt(np.diag(df_cov.loc[:, df_cov.columns != '^DJI'])),series_mean[1:],
+            label='Individual Assets', color='black')
+plt.scatter(np.sqrt(np.diag(df_cov.loc[:, df_cov.columns == '^DJI'])),series_mean[1],
+            color='yellow', label='Dow Jones Index')
+plt.plot(sigma_p, mu_bar_p, color='red', label='Efficient Frontier')
+plt.legend()
+plt.xlabel(r'$\sigma$')
+plt.ylabel(r'$\bar{\mu}$',rotation=0)
+plt.title('Efficient Frontier and Individual Assets with Zero Beta Portfolio Combinations')
+plt.show()
